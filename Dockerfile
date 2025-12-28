@@ -1,24 +1,21 @@
-# Dockerfile pour Spring Boot
-FROM eclipse-temurin:17-jdk-jammy
+# Utiliser une image JDK 17 officielle
+FROM eclipse-temurin:17-jdk-alpine
 
-# Répertoire de travail
+# Créer un répertoire pour l'application
 WORKDIR /app
 
-# Copier les fichiers Maven pour préparer le build
+# Copier les fichiers Maven nécessaires pour le build
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
 
-# Télécharger les dépendances offline
-RUN ./mvnw dependency:go-offline
-
-# Copier le code source
+# Copier le reste du code
 COPY src src
 
-# Build de l'application
-RUN ./mvnw clean package -DskipTests
+# Installer Maven et builder l'application
+RUN ./mvnw clean install -DskipTests
 
-# Exposer le port
+# Exposer le port sur lequel Spring Boot tourne
 EXPOSE 8080
 
-# Commande pour lancer l'application avec le nom exact de ton jar
-CMD ["java", "-Dserver.port=${PORT}", "-jar", "target/API-produit-0.0.1-SNAPSHOT.jar"]
+# Lancer l'application
+CMD ["java", "-Dserver.port=$PORT", "-jar", "target/API-produit-0.0.1-SNAPSHOT.jar"]
