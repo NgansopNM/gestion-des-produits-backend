@@ -1,24 +1,17 @@
+# ===============================
+# Service Web Spring Boot
+# ===============================
 services:
-  - type: web                  # Service Web Spring Boot
-    name: springboot-app
-    plan: free                 # Instance gratuite
-    runtime: java              # Runtime Java natif
-    env:
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: springboot-db
-          property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: springboot-db
-          property: username
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: springboot-db
-          property: password
+  - type: web
+    name: springboot-app           # Nom du service backend
+    plan: free                     # Plan gratuit
+    runtime: java                  # Java natif
     buildCommand: mvn clean install
     startCommand: java -Dserver.port=$PORT -jar target/mon-app.jar
 
+# ===============================
+# Base de données PostgreSQL
+# ===============================
 databases:
-  - name: springboot-db       # Base Postgres gérée par Render
-    plan: free                # Plan gratuit
+  - name: springboot-db           # Nom de la DB
+    plan: free                    # Plan gratuit
