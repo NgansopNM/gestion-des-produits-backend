@@ -2,14 +2,22 @@ services:
   - type: web                  # Service Web Spring Boot
     name: springboot-app
     plan: free                 # Instance gratuite
-    runtime: docker            # Runtime Docker (pour construire avec Maven)
-    buildCommand: mvn clean install
-    startCommand: java -Dserver.port=$PORT -jar target/mon-app.jar
-    envVars:
-      - key: DATABASE_URL      # La variable d’environnement de connexion
+    runtime: java              # Runtime Java natif
+    env:
+      - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: springboot-db
           property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: springboot-db
+          property: username
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: springboot-db
+          property: password
+    buildCommand: mvn clean install
+    startCommand: java -Dserver.port=$PORT -jar target/mon-app.jar
 
 databases:
   - name: springboot-db       # Base Postgres gérée par Render
